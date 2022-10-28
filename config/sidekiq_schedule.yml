@@ -1,0 +1,6 @@
+minutely_jobs:
+  cron: '* * * * *'
+  class: CronJob::Enqueuer
+  args: ['HOUR']
+  queue: critical
+  status: enabled

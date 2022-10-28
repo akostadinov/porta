@@ -2,6 +2,7 @@
 
 require 'three_scale/sidekiq_retry_support'
 require 'three_scale/sidekiq_logging_middleware'
+require 'three_scale/sidekiq_logging'
 require 'sidekiq/throttled'
 
 Sidekiq::Throttled.setup!
@@ -18,6 +19,8 @@ Sidekiq.configure_server do |config|
     chain.add ThreeScale::Analytics::SidekiqMiddleware
     chain.add ThreeScale::SidekiqRetrySupport::Middleware
   end
+
+  Sidekiq::Logging.singleton_class.prepend ThreeScale::SidekiqLogging
 
   faraday = ThreeScale::Core.faraday
   faraday.options.timeout = 30
