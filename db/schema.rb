@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_08_155529) do
+ActiveRecord::Schema.define(version: 2023_05_15_210900) do
 
   create_table "access_tokens", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
     t.bigint "owner_id", null: false
@@ -119,6 +119,26 @@ ActiveRecord::Schema.define(version: 2023_03_08_155529) do
     t.index ["account_id", "service_id", "state", "cinstance_id"], name: "index_alerts_with_service_id"
     t.index ["cinstance_id"], name: "index_alerts_on_cinstance_id"
     t.index ["timestamp"], name: "index_alerts_on_timestamp"
+  end
+
+  create_table "annotation_references", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
+    t.string "annotated_type", null: false
+    t.bigint "annotated_id", null: false
+    t.bigint "tenant_id"
+    t.bigint "annotation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["annotated_type", "annotated_id"], name: "index_annotation_references_on_annotated_type_and_annotated_id"
+    t.index ["annotation_id"], name: "index_annotation_references_on_annotation_id"
+  end
+
+  create_table "annotations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin", force: :cascade do |t|
+    t.string "annotation", limit: 42, null: false
+    t.string "value"
+    t.bigint "tenant_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["annotation", "tenant_id"], name: "index_annotations_on_annotation_and_tenant_id", unique: true
   end
 
   create_table "api_docs_services", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin", force: :cascade do |t|
@@ -1468,6 +1488,7 @@ ActiveRecord::Schema.define(version: 2023_03_08_155529) do
     t.boolean "application_key_updated_on", default: false
   end
 
+  add_foreign_key "annotation_references", "annotations"
   add_foreign_key "api_docs_services", "services"
   add_foreign_key "payment_details", "accounts", on_delete: :cascade
   add_foreign_key "policies", "accounts", on_delete: :cascade

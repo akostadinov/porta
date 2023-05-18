@@ -204,6 +204,9 @@ ActiveRecord::Base.transaction do
   # Import CMS templates
   SimpleLayout.new(provider).import! if ENV['CMS_TEMPLATES'].present?
 
+  # Create the managed by operator annotation
+  Operator::Managed::CreateAnnotation.call
+
   ###
   #  Creating Sample Data
   ###

@@ -15,10 +15,14 @@ class Provider::Admin::BackendApisIndexPresenter
   delegate :total_entries, to: :backend_apis
 
   def backend_apis
-    @backend_apis ||= current_account.accessible_backend_apis
+    return @backend_apis if @backend_apis
+
+    backend_apis = current_account.accessible_backend_apis
                                      .order(sorting_params)
                                      .scope_search(search)
                                      .paginate(pagination_params)
+
+    @backend_apis = Operator::Managed::FetchRelationData.call(backend_apis).result
   end
 
   alias paginated_backend_apis backend_apis

@@ -11,6 +11,7 @@ class BackendApiPresenter < SimpleDelegator
       updatedAt: updated_at.to_s(:long),
       privateEndpoint: private_endpoint,
       links: links,
+      managedByOperator: Operator::Managed::CheckManaged.call(__getobj__).result,
       productsCount: decorate.products_count
     }
   end
@@ -21,6 +22,7 @@ class BackendApiPresenter < SimpleDelegator
       name: name,
       updated_at: updated_at.to_s(:long),
       link: decorate.link,
+      managedByOperator: Operator::Managed::CheckManaged.call(__getobj__).result,
       links: links
     }
   end
