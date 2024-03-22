@@ -70,7 +70,7 @@ class Admin::Api::BuyersApplicationKeysTest < ActionDispatch::IntegrationTest
   end
 
   test 'destroy key' do
-    %w[foo-key foo.key].each do |rm_key|
+    %w[foo-key foo.key key-ending.json key-ending.xml].each do |rm_key|
 
       application = @buyer.bought_cinstances.last
       expect_backend_create_key(application, rm_key)
